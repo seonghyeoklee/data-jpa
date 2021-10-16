@@ -8,11 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.entity.Member;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Rollback(value = false)
+@Rollback(value = false) /* 테스트 진행 후 Rollback 안함 */
 class MemberJpaRepositoryTest {
 
     @Autowired
@@ -22,7 +21,6 @@ class MemberJpaRepositoryTest {
     public void testMember() {
         Member member = new Member("memberA");
         Member savedMember = memberJpaRepository.save(member);
-
         Member findMember = memberJpaRepository.find(savedMember.getId());
 
         assertThat(findMember.getId()).isEqualTo(member.getId());
