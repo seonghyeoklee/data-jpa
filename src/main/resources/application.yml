@@ -10,6 +10,8 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
+        # 데이터베이스 방언설정
+        #dialect: org.hibernate.dialect.Oracle10gDialect
         #show_sql: true
         format_sql: true
 
