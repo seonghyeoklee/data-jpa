@@ -1,5 +1,6 @@
 package jpabook.jpashop;
 
+import jpabook.jpashop.domain.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,10 +19,10 @@ class MemberRepositoryTest {
     MemberRepository memberRepository;
 
     @Test
-    void 사용자_저장() throws Exception {
+    void 사용자_저장() {
         //given
         Member member = new Member();
-        member.setUsername("memberA");
+        member.setName("memberA");
 
         //when
         Long saveId = memberRepository.save(member);
