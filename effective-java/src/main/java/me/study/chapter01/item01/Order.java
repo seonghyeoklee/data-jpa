@@ -1,5 +1,7 @@
 package me.study.chapter01.item01;
 
+import java.util.Arrays;
+
 public class Order {
 
     private boolean prime;
@@ -7,6 +9,9 @@ public class Order {
     private boolean urgent;
 
     private Product product;
+
+    // enum을 사용함으로서 type safely
+    private OrderStatus orderStatus;
 
 //    public Order(boolean prime, Product product) {
 //        this.prime = prime;
@@ -22,7 +27,6 @@ public class Order {
         Order order = new Order();
         order.prime = true;
         order.product = product;
-
         return order;
     }
 
@@ -30,7 +34,10 @@ public class Order {
         Order order = new Order();
         order.urgent = true;
         order.product = product;
-
         return order;
+    }
+
+    public static void main(String[] args) {
+        Arrays.stream(OrderStatus.values()).forEach(System.out::println);
     }
 }
