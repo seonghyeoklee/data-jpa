@@ -13,6 +13,12 @@ public class Order {
     // enum을 사용함으로서 type safely
     private OrderStatus orderStatus;
 
+    // 0 - 주문 받음
+    // 1 - 준비중
+    // 2 - 배송 중
+    // 3 - 배송 완료
+    private int status;
+
 //    public Order(boolean prime, Product product) {
 //        this.prime = prime;
 //        this.product = product;
