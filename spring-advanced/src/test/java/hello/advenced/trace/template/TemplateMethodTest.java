@@ -1,5 +1,8 @@
 package hello.advenced.trace.template;
 
+import hello.advenced.trace.template.code.AbstractTemplate;
+import hello.advenced.trace.template.code.SubClassLogic1;
+import hello.advenced.trace.template.code.SubClassLogic2;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
@@ -30,6 +33,15 @@ public class TemplateMethodTest {
         long resultTime = endTime - startTime;
 
         log.info("resultTime={}", resultTime);
+    }
+
+    @Test
+    void templateMethodV1() {
+        AbstractTemplate template1 = new SubClassLogic1();
+        template1.execute();
+
+        AbstractTemplate template2 = new SubClassLogic2();
+        template2.execute();
     }
 
 }
