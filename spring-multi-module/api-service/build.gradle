@@ -1,0 +1,42 @@
+buildscript {
+    ext {
+        snippetsDir = file('build/generated-snippets')
+    }
+}
+
+plugins {
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
+}
+
+bootJar {
+    dependsOn asciidoctor
+    copy {
+        from "${asciidoctor.outputDir}"
+        into 'BOOT-INF/classes/static/docs'
+    }
+}
+
+dependencies {
+    testImplementation 'org.springframework.restdocs:spring-restdocs-webtestclient'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    outputs.dir snippetsDir
+}
+
+asciidoctor {
+    dependsOn test
+    inputs.dir snippetsDir
+}
+
+task copyDocument(type: Copy) {
+    dependsOn asciidoctor
+    from file("build/docs/asciidoc")
+    into file("src/main/resources/static/docs")
+}
+
+build {
+    delete file('src/main/resources/static/docs')
+    dependsOn copyDocument
+}

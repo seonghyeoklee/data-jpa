@@ -1,0 +1,32 @@
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+:toc: left
+:toclevels: 2
+:source-highlighter: highlightjs
+:icons: font
+:doctype: book
+:sectlinks:
+
+= Mobility REST-API
+
+== Sample API
+
+=== Sample 작성
+
+.curl
+
+include::{snippets}/sample-create/curl-request.adoc[]
+
+.request
+
+include::{snippets}/sample-create/http-request.adoc[]
+
+.response
+
+include::{snippets}/sample-create/http-response.adoc[]
+
+.response-fields
+
+include::{snippets}/sample-create/response-fields.adoc[]
