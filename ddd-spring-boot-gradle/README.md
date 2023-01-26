@@ -104,3 +104,12 @@ private String receiverPhoneNumber; // 받는 사람 핸드폰 번호
 ```
 
 Receiver 라는 밸류 타입을 생성하고 받는 사람으로 표현하고 값 객체로 분리할 수 있다.
+
+```java
+public Money add(Money money) {
+    return new Money(this.value + money.getValue());
+}
+```
+
+Money처럼 데이터를 변경하는 경우 기존 데이터를 변경하기 보다 새로운 객체를 생성하여 반환하는 방식을 선호한다. 데이터 변경 기능을 제공하지 않는 타입을 불변이라고 표현한다.
+불변인 객체를 사용하는 이유는 안전한 코드를 작성할 수 있다는 데 있다. 
