@@ -17,7 +17,7 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class MemberRepository {
-    private final static String TABLE = "member";
+    private final static String TABLE = "Member";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 

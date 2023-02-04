@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ public class MemberNicknameHistoryRepository {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public Optional<MemberNicknameHistory> findAllByMemberId(Long memberId) {
+    public List<MemberNicknameHistory> findAllByMemberId(Long memberId) {
         String sql = String.format("SELECT * FROM %s WHERE memberId = :memberId", TABLE);
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("memberId", memberId);
@@ -32,8 +32,7 @@ public class MemberNicknameHistoryRepository {
                 .createdAt(rs.getObject("createdAt", LocalDateTime.class))
                 .build();
 
-        MemberNicknameHistory memberNicknameHistory = namedParameterJdbcTemplate.queryForObject(sql, params, rowMapper);
-        return Optional.ofNullable(memberNicknameHistory);
+        return namedParameterJdbcTemplate.query(sql, params, rowMapper);
     }
 
     public MemberNicknameHistory save(MemberNicknameHistory memberNicknameHistory) {
