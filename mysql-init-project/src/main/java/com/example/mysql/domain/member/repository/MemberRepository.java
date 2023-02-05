@@ -12,12 +12,20 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
 public class MemberRepository {
     private final static String TABLE = "Member";
+    private static final RowMapper<Member> ROW_MAPPER = (rs, rowNum) -> Member.builder()
+            .id(rs.getLong("id"))
+            .email(rs.getString("email"))
+            .nickname(rs.getString("nickname"))
+            .birthday(rs.getObject("birthday", LocalDate.class))
+            .createdAt(rs.getObject("createdAt", LocalDateTime.class))
+            .build();
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -26,16 +34,20 @@ public class MemberRepository {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("id", id);
 
-        RowMapper<Member> rowMapper = (rs, rowNum) -> Member.builder()
-                .id(rs.getLong("id"))
-                .email(rs.getString("email"))
-                .nickname(rs.getString("nickname"))
-                .birthday(rs.getObject("birthday", LocalDate.class))
-                .createdAt(rs.getObject("createdAt", LocalDateTime.class))
-                .build();
-
-        Member member = namedParameterJdbcTemplate.queryForObject(sql, params, rowMapper);
+        Member member = namedParameterJdbcTemplate.queryForObject(sql, params, ROW_MAPPER);
         return Optional.ofNullable(member);
+    }
+
+    public List<Member> findAllByIdIn(List<Long> ids) {
+        if (ids.isEmpty()) {
+            return List.of();
+        }
+
+        String sql = String.format("SELECT * FROM %s WHERE id IN (:ids)", TABLE);
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("ids", ids);
+
+        return namedParameterJdbcTemplate.query(sql, params, ROW_MAPPER);
     }
 
     public Member save(Member member) {
