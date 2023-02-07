@@ -1,4 +1,4 @@
-package com.example.mysql.domain;
+package com.example.mysql.utils;
 
 import org.springframework.data.domain.Sort;
 

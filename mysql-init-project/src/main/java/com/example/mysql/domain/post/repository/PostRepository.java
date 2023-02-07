@@ -1,9 +1,9 @@
 package com.example.mysql.domain.post.repository;
 
-import com.example.mysql.domain.PageHelper;
 import com.example.mysql.domain.post.dto.DailyPostCount;
 import com.example.mysql.domain.post.dto.DailyPostCountRequest;
 import com.example.mysql.domain.post.entity.Post;
+import com.example.mysql.utils.PageHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -83,6 +83,37 @@ public class PostRepository {
                 """, TABLE);
 
         return namedParameterJdbcTemplate.queryForObject(sql, params, Long.class);
+    }
+
+    public List<Post> findAllByMemberIdAndOrderByIdDesc(Long memberId, int size) {
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("memberId", memberId)
+                .addValue("size", size);
+
+        String sql = String.format("""
+                SELECT *
+                FROM %s
+                WHERE memberId = :memberId
+                LIMIT :size
+                """, TABLE);
+
+        return namedParameterJdbcTemplate.query(sql, params, ROW_MAPPER);
+    }
+
+    public List<Post> findAllByLessThanIdAndOrderByIdDesc(Long id, Long memberId, int size) {
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("memberId", memberId)
+                .addValue("size", size)
+                .addValue("id", id);
+
+        String sql = String.format("""
+                SELECT *
+                FROM %s
+                WHERE memberId = :memberId and id < :id
+                LIMIT :size
+                """, TABLE);
+
+        return namedParameterJdbcTemplate.query(sql, params, ROW_MAPPER);
     }
 
     public Post save(Post post) {
