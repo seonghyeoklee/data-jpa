@@ -1,5 +1,6 @@
 package com.example.mysql.controller;
 
+import com.example.mysql.application.usecase.GetTimelinePostsUseCase;
 import com.example.mysql.domain.post.dto.DailyPostCount;
 import com.example.mysql.domain.post.dto.DailyPostCountRequest;
 import com.example.mysql.domain.post.dto.PostCommand;
@@ -23,6 +24,7 @@ import java.util.List;
 public class PostController {
     private final PostWriteService postWriteService;
     private final PostReadService postReadService;
+    private final GetTimelinePostsUseCase getTimelinePostsUseCase;
 
     @PostMapping("/posts")
     public Long create(PostCommand command) {
@@ -42,5 +44,10 @@ public class PostController {
     @GetMapping("/posts/members/{memberId}/by-cursor")
     public PageCursor<Post> getPosts(@PathVariable Long memberId, CursorRequest cursorRequest) {
         return postReadService.getPosts(memberId, cursorRequest);
+    }
+
+    @GetMapping("/posts/members/{memberId}/timeline")
+    public PageCursor<Post> getTimeline(@PathVariable Long memberId, CursorRequest cursorRequest) {
+        return getTimelinePostsUseCase.execute(memberId, cursorRequest);
     }
 }
