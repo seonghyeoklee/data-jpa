@@ -1,5 +1,6 @@
 package com.example.mysql.controller;
 
+import com.example.mysql.application.usecase.CreatePostUseCase;
 import com.example.mysql.application.usecase.GetTimelinePostsUseCase;
 import com.example.mysql.domain.post.dto.DailyPostCount;
 import com.example.mysql.domain.post.dto.DailyPostCountRequest;
@@ -25,10 +26,11 @@ public class PostController {
     private final PostWriteService postWriteService;
     private final PostReadService postReadService;
     private final GetTimelinePostsUseCase getTimelinePostsUseCase;
+    private final CreatePostUseCase createPostUseCase;
 
     @PostMapping("/posts")
     public Long create(PostCommand command) {
-        return postWriteService.create(command);
+        return createPostUseCase.execute(command);
     }
 
     @GetMapping("/posts/daily-post-counts")

@@ -33,6 +33,10 @@ public class PostReadService {
         return new PageCursor<>(cursorRequest.next(nextKey), posts);
     }
 
+    public List<Post> getPosts(List<Long> ids) {
+        return postRepository.findAllByIdIn(ids);
+    }
+
     public PageCursor<Post> getPosts(List<Long> memberIds, CursorRequest cursorRequest) {
         List<Post> posts = findAllBy(memberIds, cursorRequest);
         long nextKey = getNextKey(posts);
