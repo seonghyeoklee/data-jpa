@@ -259,3 +259,38 @@ POST http://localhost:8080/actuator/loggers/com.example.controller
 ```
 
 요청에 성공하면 204 응답이 온다. 그리고 로그 레벨을 확인하면 변경된 것을 확인할 수 있다.
+
+### HTTP 요청 응답 기록
+
+- HTTP 요청과 응답의 과거 기록을 확인하고 싶다면 httpexchanges 엔드포인트를 사용하면 된다.
+- Application.java 빈 등록
+
+```java
+@Bean
+public InMemoryHttpExchangeRepository httpExchangeRepository() {
+  return new InMemoryHttpExchangeRepository();
+}
+```
+
+http://localhost:8080/actuator/httpexchanges
+
+실행해보면 지금까지 실행한 HTTP 요청과 응답 정보를 확인할 수 있다.
+참고로 이 기능은 매우 단순하고 기능에 제한이 많기 때문에 개발 단계에서만 사용하고, 실제 운영 서비스에서는 모니터링 툴이나 핀포인트, Zipkin 같은 다른 기술을 사용하는 것이 좋다.
+
+### 액츄에이터와 보안
+
+액츄에이터가 제공하는 기능들은 우리 애플리케이션의 내부 정보를 너무 많이 노출한다. 
+그래서 외부 인터넷 망이 공개된 곳에 액츄에이터의 엔드포인트를 공개하는 것은 보안상 좋은 방안이 아니다. 
+액츄에이터의 엔드포인트들은 외부 인터넷에서 접근이 불가능하게 막고, 내부에서만 접근 가능한 내부망을 사용하는 것이 안전하다.
+
+#### 액츄에이터를 다른 포트에서 실행
+예를 들어서 외부 인터넷 망을 통해서 8080 포트에만 접근할 수 있고, 다른 포트는 내부망에서만 접근할 수 있다면 액츄에이터에 다른 포트를 설정하면 된다.
+액츄에이터의 기능을 애플리케이션 서버와는 다른 포트에서 실행하려면 다음과 같이 설정하면 된다. 이 경우 기존 8080 포트에서는 액츄에이터를 접근할 수 없다.
+
+```groovy
+management:
+  server:
+    port: 9292
+```
+
+http://localhost:9292/actuator
