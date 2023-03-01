@@ -23,3 +23,7 @@ info:
   app:
     name: hello-actuator
     company: yh
+
+logging:
+  level:
+    com.example.controller: debug
