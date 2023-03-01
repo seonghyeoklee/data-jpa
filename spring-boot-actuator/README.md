@@ -139,3 +139,104 @@ management:
   }
 }
 ```
+
+### 애플리케이션 정보
+
+http://localhost:8080/actuator/info
+
+```json
+{
+  "java": {
+    "version": "17.0.5",
+    "vendor": {
+      "name": "Amazon.com Inc.",
+      "version": "Corretto-17.0.5.8.1"
+    },
+    "runtime": {
+      "name": "OpenJDK Runtime Environment",
+      "version": "17.0.5+8-LTS"
+    },
+    "jvm": {
+      "name": "OpenJDK 64-Bit Server VM",
+      "vendor": "Amazon.com Inc.",
+      "version": "17.0.5+8-LTS"
+    }
+  },
+  "os": {
+    "name": "Mac OS X",
+    "version": "13.2.1",
+    "arch": "aarch64"
+  }
+}
+```
+
+- 추가로 정보를 표현하고 싶은경우 env를 이용하여 정보를 표현할 수 있다.
+
+```groovy
+management:
+  info:
+    env:
+      enabled: true
+```
+
+```groovy
+info:
+  app:
+    name: hello-actuator
+    company: yh
+```
+
+```json
+{
+  "app": {
+    "name": "hello-actuator",
+    "company": "yh"
+  },
+  "java": {
+    "version": "17.0.5",
+    "vendor": {
+      "name": "Amazon.com Inc.",
+      "version": "Corretto-17.0.5.8.1"
+    },
+    "runtime": {
+      "name": "OpenJDK Runtime Environment",
+      "version": "17.0.5+8-LTS"
+    },
+    "jvm": {
+      "name": "OpenJDK 64-Bit Server VM",
+      "vendor": "Amazon.com Inc.",
+      "version": "17.0.5+8-LTS"
+    }
+  },
+  "os": {
+    "name": "Mac OS X",
+    "version": "13.2.1",
+    "arch": "aarch64"
+  }
+}
+```
+
+#### 빌드 정보
+
+```groovy
+// build.gradle
+springBoot {
+    buildInfo()
+}
+```
+
+#### git 정보
+
+```groovy
+// build.gradle
+plugins {
+    id "com.gorylenko.gradle-git-properties" version "2.4.1" //git info
+}
+```
+
+```groovy
+management:
+  info:
+    git:
+      mode: full
+```
