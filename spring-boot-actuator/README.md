@@ -1,4 +1,6 @@
-## 프로덕션 준비 기능
+## 액츄에이터
+
+### 프로덕션 준비 기능
 
 전투에서 실패한 지휘관은 용서할 수 있지만 경계에서 실패하는 지휘관은 용서할 수 없다라는 말이있다. 장애는 언제든지 발생할 수 있지만 지속적인 모니터링이 중요하다는 의미이다.
 
@@ -34,6 +36,105 @@ Application 실행 후 http://localhost:8080/actuator
     "health": {
       "href": "http://localhost:8080/actuator/health",
       "templated": false
+    }
+  }
+}
+```
+
+- 엔드포인트 활성화 + 엔드포인트 노출이 둘다 적용되어야 사용할 수 있다.
+- application.yml - 모든 엔드포인트를 웹에 노출
+
+```groovy
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+```
+
+- application.yml - shutdown 엔드포인트 활성화
+
+```groovy
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+```
+
+- shutdown 엔드포인트는 서버를 종료시키기 때문에 기본적으로 비활성화 되어있다. 주의해서 사용하자.
+
+### 헬스 정보
+
+http://localhost:8080/actuator/health
+
+```json
+{
+  "status": "UP"
+}
+```
+
+헬스 정보를 더 자세히 보려면 다음 옵션을 지정하면 된다.
+
+```groovy
+management:
+  endpoint:
+    health:
+      show-details: always
+```
+
+```json
+{
+  "status": "UP",
+  "components": {
+    "db": {
+      "status": "UP",
+      "details": {
+        "database": "H2",
+        "validationQuery": "isValid()"
+      }
+    },
+    "diskSpace": {
+      "status": "UP",
+      "details": {
+        "total": 494384795648,
+        "free": 302213918720,
+        "threshold": 10485760,
+        "path": "/Users/woody/recruit/study/spring-boot-actuator/.",
+        "exists": true
+      }
+    },
+    "ping": {
+      "status": "UP"
+    }
+  }
+}
+```
+
+다른 컴포넌트의 상태만 확인하려면 다음 옵션을 사용하면 된다.
+
+```groovy
+management:
+  endpoint:
+    health:
+      show-components: always
+```
+
+```json
+{
+  "status": "UP",
+  "components": {
+    "db": {
+      "status": "UP"
+    },
+    "diskSpace": {
+      "status": "UP"
+    },
+    "ping": {
+      "status": "UP"
     }
   }
 }
