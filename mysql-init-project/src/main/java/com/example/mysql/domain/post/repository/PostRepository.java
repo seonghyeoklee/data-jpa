@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class PostRepository {
             .id(rs.getLong("id"))
             .memberId(rs.getLong("memberId"))
             .contents(rs.getString("contents"))
+            .likeCount(rs.getLong("likeCount"))
             .createdDate(rs.getObject("createdDate", LocalDate.class))
             .createdAt(rs.getObject("createdAt", LocalDateTime.class))
             .build();
@@ -70,6 +72,20 @@ public class PostRepository {
 
         List<Post> posts = namedParameterJdbcTemplate.query(sql, params, ROW_MAPPER);
         return new PageImpl<>(posts, pageable, getCount(memberId));
+    }
+
+    public Optional<Post> findById(Long postId) {
+        String sql = String.format("""
+                SELECT *
+                FROM %s
+                WHERE id = :postId
+                """, TABLE);
+
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("postId", postId);
+
+        Post post = namedParameterJdbcTemplate.queryForObject(sql, params, ROW_MAPPER);
+        return Optional.ofNullable(post);
     }
 
     private Long getCount(Long memberId) {
@@ -176,7 +192,7 @@ public class PostRepository {
         if (post.getId() == null) {
             return insert(post);
         }
-        throw new UnsupportedOperationException();
+        return update(post);
     }
 
     private Post insert(Post post) {
@@ -194,6 +210,23 @@ public class PostRepository {
                 .createdDate(post.getCreatedDate())
                 .createdAt(post.getCreatedAt())
                 .build();
+    }
+
+    private Post update(Post post) {
+        String sql = String.format("""
+                UPDATE %s
+                SET
+                memberId = :memberId,
+                contents = :contents,
+                likeCount = :likeCount,
+                createdDate = :createdDate,
+                createdAt = :createdAt,
+                WHERE id = :id
+                """, TABLE);
+
+        SqlParameterSource params = new BeanPropertySqlParameterSource(post);
+        namedParameterJdbcTemplate.update(sql, params);
+        return post;
     }
 
     public void bulkInsert(List<Post> posts) {

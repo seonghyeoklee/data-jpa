@@ -19,4 +19,10 @@ public class PostWriteService {
 
         return postRepository.save(post).getId();
     }
+
+    public void likePost(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow();
+        post.increaseLikeCount();
+        postRepository.save(post);
+    }
 }
